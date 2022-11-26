@@ -3,18 +3,21 @@ package org.anns.utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.anns.exceptions.ANNSException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 
 public class FileUtils {
 
-    public static final String BASE_PATH = "/Users/vishakudupa/Downloads/sift/";
+    private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
-
+    public static final String BASE_PATH = "/Users/vishakudupa/Downloads/gist/";
 
     public static class Files {
         private final float[][] base;
@@ -52,11 +55,11 @@ public class FileUtils {
         String queryFile = BASE_PATH + "query_vectors.json";
 
         try {
-            System.out.println("Reading ground truth");
+            logger.debug("Reading ground truth");
             int[][] groundTruth = new Gson().fromJson(new FileReader(groundTruthFile), new TypeToken<int[][]>() {}.getType());
-            System.out.println("Reading query file");
+            logger.debug("Reading query file");
             float[][] query = new Gson().fromJson(new FileReader(queryFile), new TypeToken<float[][]>() {}.getType());
-            System.out.println("Reading base file");
+            logger.debug("Reading base file");
             float[][] base = new Gson().fromJson(new FileReader(baseFile), new TypeToken<float[][]>() {}.getType());
             return new Files(base, groundTruth, query, base[0].length);
         } catch (FileNotFoundException e) {
@@ -65,9 +68,9 @@ public class FileUtils {
     }
 
     public static int[][] readNSG() {
-        String baseFile = BASE_PATH + "sift_nsg_vector.json";
+        String baseFile = BASE_PATH + "sift_java_nsg.json";
         try {
-            System.out.println("Reading NSG");
+            logger.debug("Reading NSG");
             return new Gson().fromJson(new FileReader(baseFile), new TypeToken<int[][]>() {}.getType());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -77,10 +80,19 @@ public class FileUtils {
     public static int[][] readKnn() {
         String baseFile = BASE_PATH + "knn.json";
         try {
-            System.out.println("Reading knn");
+            logger.debug("Reading knn");
             return new Gson().fromJson(new FileReader(baseFile), new TypeToken<int[][]>() {}.getType());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static void saveToFile(Object o, String fileName) {
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(BASE_PATH + fileName), StandardCharsets.UTF_8))) {
+            writer.write(new Gson().toJson(o));
+        } catch (Exception e) {
+            //ignore
         }
     }
 }
