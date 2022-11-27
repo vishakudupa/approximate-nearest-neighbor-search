@@ -90,13 +90,21 @@ public class NSGBuildService {
         dfs(nsg, spanningVector);
         logger.debug("time taken for DFS: {}s", (System.currentTimeMillis() - start) * 1.0/1000);
         start = System.currentTimeMillis();
+
+        IntStream.range(0, knnGraph.length).parallel().forEach(i -> {
+            this.nsg[i] = nsg[i].stream()
+                    .mapToInt(Neighbor::getId)
+                    .toArray();
+        });
         counter.set(0);
+        NSGSearchService nsgSearchServiceNew = new NSGSearchService(this.nsg, baseVector);
         IntStream.range(0, knnGraph.length).parallel().forEach(i -> {
             if (!spanningVector[i]) {
-                int[] indexes = nsgSearchService.searchKNearestNeighbor(200, baseVector[i], medoid);
+                int[] indexes = nsgSearchServiceNew.searchKNearestNeighbor(200, baseVector[i], medoid);
                 for (int in : indexes) {
                     if (spanningVector[in]) {
                         nsg[in].add(new Neighbor(i, 0.0));
+                        nsg[i].add(new Neighbor(in, 0.0));
                         break;
                     }
                 }

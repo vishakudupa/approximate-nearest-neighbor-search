@@ -1,6 +1,6 @@
 {
   "operationType": "SEARCH",
-  "basePath" : "/Users/vishakudupa/Downloads/sift/",
+  "basePath" : "/Users/vishakudupa/IdeaProjects/anns_datasets/sift/",
   "knnGraphPath" : "knn.json",
   "baseVectorPath" : "base_vectors.json",
   "queryPath" : "query_vectors.json",
