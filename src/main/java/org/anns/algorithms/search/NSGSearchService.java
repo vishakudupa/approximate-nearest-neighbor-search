@@ -1,6 +1,5 @@
 package org.anns.algorithms.search;
 
-import com.google.common.cache.CacheStats;
 import org.anns.utils.DistanceUtils;
 import org.anns.utils.Neighbor;
 import org.slf4j.Logger;
@@ -8,22 +7,17 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class NSGSearch {
-    private static final Logger logger = LoggerFactory.getLogger(NSGSearch.class);
+public class NSGSearchService {
+    private static final Logger logger = LoggerFactory.getLogger(NSGSearchService.class);
 
     private final int[][] adjacencyGraph;
     private final float[][] baseVector;
 
-    private int l = 10;
+    private int l = 40;
 
     private static final Random random = new Random();
-    public NSGSearch(String adjacencyGraphFile, String baseVectorFile) {
-        //TODO: load the file
-        this.adjacencyGraph = new int[1][1];
-        this.baseVector = new float[1][1];
-    }
 
-    public NSGSearch(int[][] adjacencyGraph, float[][] baseVector) {
+    public NSGSearchService(int[][] adjacencyGraph, float[][] baseVector) {
         this.adjacencyGraph = adjacencyGraph;
         this.baseVector = baseVector;
     }
@@ -46,7 +40,7 @@ public class NSGSearch {
                     break;
                 }
             }
-            if (itr++ > 100000)
+            if (itr++ > 10000)
                 break;
             visited.add(list.get(i).getId());
 
@@ -111,6 +105,4 @@ public class NSGSearch {
     public int getL() {
         return l;
     }
-
-
 }

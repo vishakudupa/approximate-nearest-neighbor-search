@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class BruteForce {
 
     public static void main(String[] args) {
-        FileUtils.Files files = FileUtils.readFile();
+        FileUtils.Files files = null;
 
         float[][] base = files.getBase();
         float[][] query = files.getQuery();

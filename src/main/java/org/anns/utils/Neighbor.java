@@ -18,8 +18,6 @@ public class Neighbor implements Comparable<Neighbor> {
         return squaredEuclideanDistance;
     }
 
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,0 +1,10 @@
+{
+  "operationType": "SEARCH",
+  "basePath" : "/Users/vishakudupa/Downloads/sift/",
+  "knnGraphPath" : "knn.json",
+  "baseVectorPath" : "base_vectors.json",
+  "queryPath" : "query_vectors.json",
+  "groundTruthPath": "ground_truth_vectors.json",
+  "saveNSGFilePath": "sift_from_java_new.json",
+  "loadNSGFilePath": "sift_from_java_new.json"
+}

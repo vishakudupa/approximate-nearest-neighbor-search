@@ -1,53 +1,52 @@
 package org.anns.algorithms.build;
 
-import ch.qos.logback.core.joran.sanity.Pair;
-import org.anns.algorithms.search.NSGSearch;
-import org.anns.utils.DistanceUtils;
+import org.anns.algorithms.NSG;
+import org.anns.algorithms.search.NSGSearchService;
 import org.anns.utils.FileUtils;
 import org.anns.utils.Neighbor;
-import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.anns.utils.DistanceUtils.squaredEuclideanDistance;
 
-public class NSGBuild {
+public class NSGBuildService {
 
-    private static final Logger logger = LoggerFactory.getLogger(NSGBuild.class);
+    private static final Logger logger = LoggerFactory.getLogger(NSGBuildService.class);
     private int medoid = 0;
-
     private int[][] nsg;
 
     private final int M = 50;
 
-    public NSGBuild(float[][] baseVector, int[][] knnGraph) {
+    private final float[][] baseVector;
+    private final int[][] knnGraph;
+
+    public NSGBuildService(float[][] baseVector, int[][] knnGraph) {
         nsg = new int[knnGraph.length][];
-        build(baseVector, knnGraph);
+        this.baseVector = baseVector;
+        this.knnGraph = knnGraph;
     }
 
-    private void build(float[][] baseVector, int[][] knnGraph) {
+    public NSG build() {
         logger.debug("building NSG from KNN graph");
         logger.debug("Step 1: Load medoid from the dataset");
-        loadMedoid(baseVector, knnGraph);
+        loadMedoid();
 
         logger.debug("Step 2: Build the NSG graph");
-        buildNSG(baseVector, knnGraph);
+        return buildNSG(baseVector, knnGraph);
     }
 
-    private void buildNSG(float[][] baseVector, int[][] knnGraph) {
+    private NSG buildNSG(float[][] baseVector, int[][] knnGraph) {
         long start = System.currentTimeMillis();
         List<Neighbor>[] nsg = new List[knnGraph.length];
-        NSGSearch nsgSearch = new NSGSearch(knnGraph, baseVector);
+        NSGSearchService nsgSearchService = new NSGSearchService(knnGraph, baseVector);
         AtomicInteger counter = new AtomicInteger();
         IntStream.range(0, knnGraph.length).parallel().forEach(v -> {
             List<Neighbor> nodeToConsiderForMRNGEdgeSelection =
-                    nsgSearch.getNeighborVisitedWhileSearching(medoid, v);
+                    nsgSearchService.getNeighborVisitedWhileSearching(medoid, v);
             Set<Integer> ids = new HashSet<>();
             for (Neighbor neighbor : nodeToConsiderForMRNGEdgeSelection)
                 ids.add(neighbor.getId());
@@ -94,7 +93,7 @@ public class NSGBuild {
         counter.set(0);
         IntStream.range(0, knnGraph.length).parallel().forEach(i -> {
             if (!spanningVector[i]) {
-                int[] indexes = nsgSearch.searchKNearestNeighbor(200, baseVector[i], medoid);
+                int[] indexes = nsgSearchService.searchKNearestNeighbor(200, baseVector[i], medoid);
                 for (int in : indexes) {
                     if (spanningVector[in]) {
                         nsg[in].add(new Neighbor(i, 0.0));
@@ -113,14 +112,15 @@ public class NSGBuild {
                     .toArray();
         });
         logger.debug("time taken to convert list to array: {}s", (System.currentTimeMillis() - start) * 1.0/1000);
-        FileUtils.saveToFile(this.nsg, "sift_java_nsg.json");
+        NSG nsg1 = new NSG();
+        nsg1.setNsgGraph(this.nsg);
+        nsg1.setMedoid(this.medoid);
+        return nsg1;
     }
 
     private List<Neighbor> mrngNodeSelectionStrategy(float[][] baseVector,
                                                      List<Neighbor> nodeToConsiderForMRNGEdgeSelection) {
         nodeToConsiderForMRNGEdgeSelection.sort(Comparator.comparing(Neighbor::getSquaredEuclideanDistance));
-
-
         List<Neighbor> list = new ArrayList<>(20);
         list.add(nodeToConsiderForMRNGEdgeSelection.get(0));
 
@@ -158,13 +158,13 @@ public class NSGBuild {
         }
     }
 
-    public void loadMedoid(float[][] baseVector, int[][] knnGraph) {
+    public void loadMedoid() {
         logger.debug("loading medoid");
         float[] centroid = findCentroid(baseVector);
         logger.debug("Centroid found: " + Arrays.toString(centroid));
-        NSGSearch nsgSearch = new NSGSearch(knnGraph, baseVector);
+        NSGSearchService nsgSearchService = new NSGSearchService(knnGraph, baseVector);
 
-        medoid = nsgSearch.searchKNearestNeighbor(1, centroid, medoid)[0];
+        medoid = nsgSearchService.searchKNearestNeighbor(1, centroid, new Random().nextInt(knnGraph.length))[0];
         logger.debug("Setting medoid to : {}", medoid);
     }
 
@@ -178,11 +178,6 @@ public class NSGBuild {
         }
         return centroid;
     }
-
-    public int[][] getNsg() {
-        return nsg;
-    }
-
     public int getMedoid() {
         return medoid;
     }
