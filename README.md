@@ -1,7 +1,7 @@
 # How to get the datastes?
 http://corpus-texmex.irisa.fr/ here all the datasets can be retrieved, but as all the datasets require pre-processing, we have created a preprocessed dataset and uploaded it to one drive. 
 One Drive link for siftsmall: https://fsu-my.sharepoint.com/:u:/g/personal/vu22_fsu_edu/EfIb6MzmbSZErlr09FQn90sBvLyWCE0WXDg_qzaBSAJ2BA?e=hG7lzr \
-One Drive link for sift: https://fsu-my.sharepoint.com/:u:/g/personal/vu22_fsu_edu/EZjWHWQLPNhLlUnwIiErdVUBamiTkLB0IC9XUuDT5QgAhg?e=a5Kd6v
+One Drive link for sift: https://fsu-my.sharepoint.com/:u:/g/personal/vu22_fsu_edu/EZjWHWQLPNhLlUnwIiErdVUBamiTkLB0IC9XUuDT5QgAhg
 
 Extract the dataset into a folder and copy the path to the folder.
 Now, if you look at the config.json file in the root directory it would look something like this.
