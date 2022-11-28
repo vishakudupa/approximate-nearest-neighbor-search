@@ -36,7 +36,7 @@ public class BruteForce {
                 if (topK.size() > 100)
                     topK.poll();
             }
-            List<Integer> groundTruth = Arrays.stream(files.getGroundTruth()[q]).boxed().toList();
+            List<Integer> groundTruth = Arrays.stream(files.getGroundTruth()[q]).boxed().collect(Collectors.toList());
 
             Set<Integer> set = topK
                     .stream()
