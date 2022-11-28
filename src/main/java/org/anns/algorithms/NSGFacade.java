@@ -83,7 +83,7 @@ public class NSGFacade {
         List<List<Double>> result = new ArrayList<>();
 
         logger.info("Starting search for pre-defined {} queries", files.getQuery().length);
-        for (int i = 5; i <= 200; i += 5) {
+        for (int i = 10; i <= 200; i += 10) {
             long millis = System.currentTimeMillis();
             nsgSearchService.setL(i);
             double accuracy = 0;
@@ -98,7 +98,7 @@ public class NSGFacade {
                 int v = 100 - topKVectorIndex.size();
                 accuracy += v;
             }
-            long rpm = 10_000_000 / (System.currentTimeMillis() - millis);
+            long rpm = 1000L * files.getQuery().length / (System.currentTimeMillis() - millis);
             logger.info("Accuracy: " + accuracy/files.getQuery().length
                     + " QPS: " + rpm + " L: " + i);
             result.add(List.of(accuracy/files.getQuery().length, (double) rpm));

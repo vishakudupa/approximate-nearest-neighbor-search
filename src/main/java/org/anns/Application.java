@@ -23,12 +23,13 @@ public class Application {
 
 
     public static void main(String[] args) throws FileNotFoundException {
+        if (args == null || args.length == 0)
+            throw new RuntimeException("Path to config file is required");
+        logger.info("args : {}", args);
         NSGFacade nsgFacade = new NSGFacade(
                 new Gson()
                         .fromJson(
-                                new FileReader(
-                                        "/Users/vishakudupa/IdeaProjects" +
-                                                "/approximate-nearest-neighbor-search/config.json"),
+                                new FileReader(args[0]),
                 Config.class));
         nsgFacade.runOperation();
     }

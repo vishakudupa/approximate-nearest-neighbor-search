@@ -66,23 +66,21 @@ public class NSGBuildService {
         start = System.currentTimeMillis();
         logger.debug("Starting with adding backward edges");
         counter.set(0);
-        IntStream.range(0, knnGraph.length).parallel().forEachOrdered(v -> {
+        IntStream.range(0, knnGraph.length).forEachOrdered(v -> {
             nsg[v].stream().parallel().forEach(neighbor -> {
                 int neighborId = neighbor.getId();
                 List<Neighbor> neighborsOfNeighbors = nsg[neighborId];
                 if (neighborsOfNeighbors.stream().anyMatch(n -> n.getId() == v))
                     return;
+                nsg[neighborId].add(new Neighbor(v, neighbor.getSquaredEuclideanDistance()));
                 if (nsg[neighborId].size() >= M) {
                     nsg[neighborId] = mrngNodeSelectionStrategy(baseVector, nsg[neighborId]);
-                } else {
-                    nsg[neighborId].add(new Neighbor(v, neighbor.getSquaredEuclideanDistance()));
                 }
             });
             if (counter.incrementAndGet() % 10000 == 0) {
                 logger.debug("Completed {} iterations", counter.get());
             }
         });
-
         logger.debug("time taken to create backward edges: {}s", (System.currentTimeMillis() - start) * 1.0/1000);
         start = System.currentTimeMillis();
 

@@ -1,15 +1,27 @@
 package org.anns.algorithms.search;
 
+import com.google.gson.Gson;
+import org.anns.utils.Config;
 import org.anns.utils.DistanceUtils;
 import org.anns.utils.FileUtils;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class BruteForce {
 
-    public static void main(String[] args) {
-        FileUtils.Files files = null;
+    public static void main(String[] args) throws FileNotFoundException {
+
+        Config config = new Gson()
+                .fromJson(
+                        new FileReader(
+                                "/Users/vishakudupa/IdeaProjects" +
+                                        "/approximate-nearest-neighbor-search/config.json"),
+                        Config.class);
+
+        FileUtils.Files files = FileUtils.loadFiles(config);
 
         float[][] base = files.getBase();
         float[][] query = files.getQuery();

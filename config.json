@@ -1,6 +1,6 @@
 {
-  "operationType": "SEARCH",
-  "basePath" : "/Users/vishakudupa/IdeaProjects/anns_datasets/sift/",
+  "operationType": "BUILD",
+  "basePath" : "/Users/vishakudupa/IdeaProjects/anns_datasets/guass2m/",
   "knnGraphPath" : "knn.json",
   "baseVectorPath" : "base_vectors.json",
   "queryPath" : "query_vectors.json",
