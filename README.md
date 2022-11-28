@@ -6,7 +6,7 @@ One Drive link for sift: https://fsu-my.sharepoint.com/:u:/g/personal/vu22_fsu_e
 Extract the dataset into a folder and copy the path to the folder.
 Now, if you look at the config.json file in the root directory it would look something like this.
 \
-```{
+``` {
 "operationType": "BUILD",
 "basePath" : "/Users/vishakudupa/IdeaProjects/anns_datasets/siftsmall/",
 "knnGraphPath" : "knn.json",
@@ -15,7 +15,7 @@ Now, if you look at the config.json file in the root directory it would look som
 "groundTruthPath": "ground_truth_vectors.json",
 "saveNSGFilePath": "sift_from_java_new.json",
 "loadNSGFilePath": "sift_from_java_new.json"
-}```
+} ```
 
 In this three types of operators are supported: 1. BUILD, SEARCH, BUILD_AND_SEARCH. So, choose any of the operator. SEARCH would run the pre-defined queries and validate against the ground truth. BUILD would build the graph and save with the name saveNSGFilePath. SEARCH_AND_BUILD would do both of these things. \
 After this you would need to paste the copied path to the extracted folder including the ending '/'. 
