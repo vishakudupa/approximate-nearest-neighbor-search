@@ -27,6 +27,11 @@ If you want to test the whole code, I would recommend running siftsmall as it re
 
 # How to run the code?
 To make things simpler we have built the project using maven.\
+```
+        <maven.compiler.source>18</maven.compiler.source>
+        <maven.compiler.target>18</maven.compiler.target>
+```
+In pom.xml change these two lines to reflect the jdk version that you are using. We have tried with open-jdk-11 and open-jdk-18 \
 So, first you would need to install maven, it can be done by running `sudo apt-get install maven` or `brew install maven`. 
 After that to compile and package the project run `mvn clean package` \
 And finally, to run the code `java -Xmx4096m -jar <base_path>/approximate-nearest-neighbor-search/target/approximate-nearest-neighbor-search-1.0-SNAPSHOT-jar-with-dependencies.jar config.json` where `config.json` is the config file.
