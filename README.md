@@ -23,13 +23,13 @@ For simplicity, we have kept all the json files name same across the datasets, s
 We have also included a pre-built graph, which can be directly run on the query set and verified against the ground truth. As It might take around 400s(On macbook) to build the graph. This number varies heavily on the number of cores and the type of processor.\
 If you want to test the whole code, I would recommend running siftsmall as it requires very less time to build the graph. 
 
-#How to run the code?
+# How to run the code?
 To make things simpler we have built the project using maven.\
 So, first you would need to install maven, it can be done by running `sudo apt-get install maven` or `brew install maven`. 
 After that to compile and package the project run `mvn clean package` \
 And finally, to run the code `java -Xmx4096m -jar <base_path>/approximate-nearest-neighbor-search/target/approximate-nearest-neighbor-search-1.0-SNAPSHOT-jar-with-dependencies.jar config.json` where `config.json` is the config file.
 
-The output should look something like this
+# The output should look something like this
 ```
 2022-11-27 22:34:31,652 [INFO ] [main] - args : config.json
 2022-11-27 22:34:31,738 [DEBUG] [main] - Loading : base_vectors.json
@@ -77,6 +77,7 @@ The output should look something like this
 2022-11-27 22:34:37,375 [INFO ] [main] - Result : [[55.13, 3333.0], [72.85, 3703.0], [83.16, 2777.0], [89.32, 2272.0], [93.35, 1724.0], [95.51, 1538.0], [97.25, 1369.0], [97.98, 925.0], [98.69, 934.0], [98.97, 884.0], [99.26, 862.0], [99.43, 840.0], [99.58, 763.0], [99.68, 704.0], [99.74, 641.0], [99.83, 591.0], [99.86, 520.0], [99.89, 507.0], [99.91, 460.0], [99.91, 431.0]]
 ```
 
-Thank You for trying out the project. 
-
+# Thanks to the original authors of the paper
 This project is a Java implementation of https://arxiv.org/abs/1707.00143. 
+
+# Thank You for trying out the project. 
