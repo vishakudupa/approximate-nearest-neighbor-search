@@ -93,7 +93,7 @@ public class NSGFacade {
             for (int q = 0; q < files.getQuery().length; q++) {
                 int[] vectors = nsgSearchService.searchKNearestNeighbor(100, files.getQuery()[q], medoid);
 
-                List<Integer> groundTruth = Arrays.stream(files.getGroundTruth()[q]).boxed().toList();
+                List<Integer> groundTruth = Arrays.stream(files.getGroundTruth()[q]).boxed().collect(Collectors.toList());
                 Set<Integer> topKVectorIndex = Arrays.stream(vectors).boxed().collect(Collectors.toSet());
                 if (topKVectorIndex.size() != 100)
                     logger.debug("Size set {}", topKVectorIndex.size());
