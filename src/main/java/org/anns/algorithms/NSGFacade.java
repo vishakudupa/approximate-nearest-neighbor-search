@@ -62,18 +62,21 @@ public class NSGFacade {
 
     public void runOperation() {
         switch (config.getOperationType()) {
-            case BUILD -> {
+            case BUILD: {
                 NSGBuildService nsgBuildService = new NSGBuildService(files.getBase(), files.getKnn());
                 NSG nsg = nsgBuildService.build();
                 FileUtils.saveToFile(nsg, config.getBasePath() + config.getSaveNSGFilePath());
             }
-            case SEARCH -> search(files.getNsg(), files);
-            case BUILD_AND_SEARCH -> {
+            break;
+            case SEARCH: search(files.getNsg(), files);
+            break;
+            case BUILD_AND_SEARCH: {
                 NSGBuildService nsgBuildService1 = new NSGBuildService(files.getBase(), files.getKnn());
                 NSG nsg = nsgBuildService1.build();
                 FileUtils.saveToFile(nsg, config.getBasePath() + config.getSaveNSGFilePath());
                 search(nsg, files);
             }
+            break;
         }
     }
 
