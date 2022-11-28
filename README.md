@@ -8,7 +8,7 @@ Now, if you look at the config.json file in the root directory it would look som
 \
 ``` 
 {
-"operationType": "BUILD",
+"operationType": "BUILD_AND_SEARCH",
 "basePath" : "/Users/vishakudupa/IdeaProjects/anns_datasets/siftsmall/",
 "knnGraphPath" : "knn.json",
 "baseVectorPath" : "base_vectors.json",
