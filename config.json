@@ -6,5 +6,6 @@
   "queryPath" : "query_vectors.json",
   "groundTruthPath": "ground_truth_vectors.json",
   "saveNSGFilePath": "sift_from_java_new.json",
-  "loadNSGFilePath": "sift_from_java_new.json"
+  "loadNSGFilePath": "sift_from_java_new.json",
+  "searchType" : "SEQUENTIAL"
 }
