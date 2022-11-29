@@ -4,6 +4,10 @@ public class Config {
     public enum Operation {
         SEARCH, BUILD, BUILD_AND_SEARCH
     }
+
+    public enum SearchType {
+        PARALLEL, SEQUENTIAL
+    }
     private Operation operationType;
 
     private String basePath;
@@ -13,6 +17,15 @@ public class Config {
     private String groundTruthPath;
     private String saveNSGFilePath;
     private String loadNSGFilePath;
+
+    private SearchType searchType = SearchType.SEQUENTIAL;
+
+    public SearchType getSearchType() {
+        return searchType;
+    }
+    public void setSearchType(SearchType searchType) {
+        this.searchType = searchType;
+    }
 
     public String getBasePath() {
         return basePath;

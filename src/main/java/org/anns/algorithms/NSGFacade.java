@@ -1,6 +1,7 @@
 package org.anns.algorithms;
 
 import com.google.common.base.Strings;
+import com.google.common.util.concurrent.AtomicDouble;
 import org.anns.Application;
 import org.anns.algorithms.build.NSGBuildService;
 import org.anns.algorithms.search.NSGSearchService;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class NSGFacade {
 
@@ -80,7 +82,7 @@ public class NSGFacade {
         }
     }
 
-    private static void search(NSG nsg, FileUtils.Files files) {
+    private void search(NSG nsg, FileUtils.Files files) {
         NSGSearchService nsgSearchService = new NSGSearchService(nsg.getNsgGraph(), files.getBase());
         int medoid = nsg.getMedoid();
         List<List<Double>> result = new ArrayList<>();
@@ -89,22 +91,23 @@ public class NSGFacade {
         for (int i = 10; i <= 200; i += 10) {
             long millis = System.currentTimeMillis();
             nsgSearchService.setL(i);
-            double accuracy = 0;
-            for (int q = 0; q < files.getQuery().length; q++) {
+            AtomicDouble accuracy = new AtomicDouble();
+            IntStream queryStream = IntStream.range(0, files.getQuery().length);
+            if (config.getSearchType() != null && config.getSearchType().equals(Config.SearchType.PARALLEL))
+                queryStream = queryStream.parallel();
+            queryStream.parallel().forEach(q -> {
                 int[] vectors = nsgSearchService.searchKNearestNeighbor(100, files.getQuery()[q], medoid);
 
                 List<Integer> groundTruth = Arrays.stream(files.getGroundTruth()[q]).boxed().collect(Collectors.toList());
                 Set<Integer> topKVectorIndex = Arrays.stream(vectors).boxed().collect(Collectors.toSet());
-                if (topKVectorIndex.size() != 100)
-                    logger.debug("Size set {}", topKVectorIndex.size());
                 groundTruth.forEach(topKVectorIndex::remove);
                 int v = 100 - topKVectorIndex.size();
-                accuracy += v;
-            }
+                accuracy.addAndGet(v);
+            });
             long rpm = 1000L * files.getQuery().length / (System.currentTimeMillis() - millis);
-            logger.info("Accuracy: " + accuracy/files.getQuery().length
+            logger.info("Accuracy: " + accuracy.get()/files.getQuery().length
                     + " QPS: " + rpm + " L: " + i);
-            result.add(List.of(accuracy/files.getQuery().length, (double) rpm));
+            result.add(List.of(accuracy.get()/files.getQuery().length, (double) rpm));
         }
         logger.info("Result : {}", result);
     }
